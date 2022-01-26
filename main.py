@@ -45,15 +45,25 @@ glb.logger.addHandler(ch)
 # logger.critical('Fatal error. Cannot continue')
 # logging.basicConfig(level=logging.DEBUG,
 #                         format='(%(threadName)-9s) %(message)s',)
-def calculateSkeleton(with_copy=True):
+def calculateSkeleton(op,working_mode='SNAP_FROM_LIVE'):
     global all_vertexes_dist_matrix_np
-    if with_copy:
-        last_snaped_image = newest_file_in_folder(OpenPose.FULL_IN_LOG_IMG_FOLDER)
-        shutil.copy(last_snaped_image, OpenPose.SNAPSHOT_TMP_IMAGE_NAME)
-        glb.logger.debug(f'performed: shutil.copy({last_snaped_image}, {OpenPose.SNAPSHOT_TMP_IMAGE_NAME})')
+
+    if working_mode=='SNAP_FROM_LIVE':
+        last_snaped_image = newest_file_in_folder(op.FULL_IN_LOG_IMG_FOLDER)
+        shutil.copy(last_snaped_image, op.SNAPSHOT_TMP_IMAGE_NAME)
+        glb.logger.debug(f'Copy last snaped image to OpenPose: shutil.copy({last_snaped_image}, {OpenPose.SNAPSHOT_TMP_IMAGE_NAME})')
+    elif working_mode=='DEMO_IMAGE':
+        shutil.copy(op.FULL_PATH_DEMO_IMG, op.SNAPSHOT_TMP_IMAGE_NAME)
+        glb.logger.debug(f'Process buildin DEMO image : shutil.copy({op.FULL_PATH_DEMO_IMG}, {op.SNAPSHOT_TMP_IMAGE_NAME})')
+    else:
+        glb.logger.debug(f'RAMI ERROR: No such working_mode={working_mode} there fore set it to SNAP_FROM_LIVE')
+        working_mode = 'DEMO_IMAGE'
+        shutil.copy(op.FULL_PATH_DEMO_IMG, op.SNAPSHOT_TMP_IMAGE_NAME)
+        glb.logger.debug(f'Process buildin DEMO image : shutil.copy({op.FULL_PATH_DEMO_IMG}, {op.SNAPSHOT_TMP_IMAGE_NAME})')
+
     OpenPose.Run()
-    body_vertexes_df = OpenPose.op_json_to_df(OpenPose.JSON_TMP_FILE)
-    all_vertexes_dist_matrix_np = OpenPose.generate_ditance_np_matrix(body_vertexes_df)
+    body_vertexes_df = op.op_json_to_df(OpenPose.JSON_TMP_FILE)
+    all_vertexes_dist_matrix_np = op.generate_ditance_np_matrix(body_vertexes_df)
 
 def takeSnapshot(op):
     # grab the current timestamp and use it to construct the
@@ -66,7 +76,8 @@ def takeSnapshot(op):
     # save the file
     cv2.imwrite(p, cv2image.copy())
     glb.logger.debug("[INFO] saved {}".format(p))
-    calculateSkeleton(True)
+
+    calculateSkeleton(op,'SNAP_FROM_LIVE')
 
 # Define function to show frame
 def show_frames():
@@ -89,6 +100,7 @@ def newest_file_in_folder(path):
 
 
 OpenPose=OpenPoseClass('C:/24D/LibertySnapshot')
+#OpenPose.PROGRAM_RUNNING_MODE='SNAP_FROM_LIVE'
 outputPath = OpenPose.FULL_IN_LOG_IMG_FOLDER
 
 # Create an instance of TKinter Window or frame
@@ -103,9 +115,8 @@ btn = Button(win, text="Snapshot!",
              #command=takeSnapshot)
 btn.grid(row=1, column=0)
 
-btn_prev = Button(win, text="Measure Previous Frame",
-             command=lambda myOp=False : calculateSkeleton(myOp))
-             #command=takeSnapshot)
+btn_prev = Button(win, text="Measure Demo Image",
+             command=lambda myOp=OpenPose, myMode='DEMO_IMAGE' : calculateSkeleton(myOp,myMode))
 btn_prev.grid(row=2, column=0)
 
 # Create a Label to capture the Video frames

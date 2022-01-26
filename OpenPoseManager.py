@@ -20,6 +20,7 @@ import time
 class OpenPoseClass:
 
     def __init__(self, new_folder=None):
+        self.PROGRAM_RUNNING_MODE = 'DEMO_IMAGE' #'SNAP_FROM_LIVE' 'DEMO_IMAGE'
         self.SNAPSHOT_TMP_NAME = "tmp1"
         self.ROOT_DIR = "C:/24D/openpose"
         self.OP_PROGRAM_NAME = self.ROOT_DIR + "/bin/OpenPoseDemo.exe"
@@ -27,6 +28,8 @@ class OpenPoseClass:
         self.INPUT_SNAP_LOG_FOLDER = "/Snapshot-Log"
         self.INPUT_SNAP_IMAGE_FOLDER = "/Snapshot-Image"
         self.OUTPUT_FOLDER_NAME = self.DATA_FOLDER + "/Results"
+        self.FULL_PATH_CONFIG_FOLDER = self.DATA_FOLDER + "/LibertyConfig"
+        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
         self.CAMERA_ID = 0
         self.update_data_folders(new_folder)
 
@@ -43,7 +46,7 @@ class OpenPoseClass:
 
         self.OUTPUT_FOLDER_NAME = self.DATA_FOLDER + "/Results"
 
-        # Snap shot LOG images
+        # Snapshot LOG images
         self.FULL_IN_LOG_IMG_FOLDER = self.DATA_FOLDER + self.INPUT_SNAP_LOG_FOLDER
         glb.logger.debug(self.FULL_IN_LOG_IMG_FOLDER)
         if not os.path.exists(self.FULL_IN_LOG_IMG_FOLDER):
@@ -66,6 +69,12 @@ class OpenPoseClass:
             os.mkdir(self.SKELETON_IMAGE_FOLDER_NAME)
         self.JSON_TMP_FILE = self.JSON_FOLDER_NAME + "/" + self.SNAPSHOT_TMP_NAME + "_keypoints.json"
         self.SEKELETON_TMP_IMG = self.SKELETON_IMAGE_FOLDER_NAME + "/" + self.SNAPSHOT_TMP_NAME + "_rendered.png"
+        #Configuration
+        self.FULL_PATH_CONFIG_FOLDER = self.DATA_FOLDER + "/LibertyConfig"
+        if not os.path.exists(self.FULL_PATH_CONFIG_FOLDER):
+            os.mkdir(self.SKELETON_IMAGE_FOLDER_NAME)
+            glb.logger.debug(f'RAMI ERROR: The configuration folder dose not exist there fore I create it for you but and its content is missing: {self.SKELETON_IMAGE_FOLDER_NAME}')
+        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
 
         self.OpInput = " --image_dir " + self.FULL_IN_TMP_IMG_FOLDER
         self.OpJsonResult = " --write_json " + self.JSON_FOLDER_NAME
