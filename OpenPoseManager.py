@@ -29,7 +29,9 @@ class OpenPoseClass:
         self.INPUT_SNAP_IMAGE_FOLDER = "/Snapshot-Image"
         self.OUTPUT_FOLDER_NAME = self.DATA_FOLDER + "/Results"
         self.FULL_PATH_CONFIG_FOLDER = self.DATA_FOLDER + "/LibertyConfig"
-        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
+        #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
+        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Only legs Genu Varum.jpg"
+
         self.CAMERA_ID = 0
         self.update_data_folders(new_folder)
 
@@ -74,8 +76,9 @@ class OpenPoseClass:
         if not os.path.exists(self.FULL_PATH_CONFIG_FOLDER):
             os.mkdir(self.SKELETON_IMAGE_FOLDER_NAME)
             glb.logger.debug(f'RAMI ERROR: The configuration folder dose not exist there fore I create it for you but and its content is missing: {self.SKELETON_IMAGE_FOLDER_NAME}')
-        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
-
+        #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
+        #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Only legs Genu Varum.jpg"
+        self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Genu Varum Two girles.jpg"
         self.OpInput = " --image_dir " + self.FULL_IN_TMP_IMG_FOLDER
         self.OpJsonResult = " --write_json " + self.JSON_FOLDER_NAME
         self.OpSkelatonImageResult = " --write_images " + self.SKELETON_IMAGE_FOLDER_NAME
@@ -163,7 +166,7 @@ class OpenPoseClass:
         return squareform(distances)
 
     # Calculates limb distances between two specics vertices
-    def dist_between_2_vertexes(self,vertexes_df, v1, v2):
+    def dist_between_2_vertexes(self, v1, v2):
         return (
         self.all_vertexes_dist_matrix_np[v1][v2])  # Keep in mind vertexes id here are -1 compare to openpose vertexes ids
 
