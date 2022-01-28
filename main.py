@@ -13,9 +13,11 @@ import sys
 import logging
 import time
 import shutil
+import FormGUI as frm
 
 from OpenPoseManager import OpenPoseClass
 import GlobalVars as glb
+
 
 global all_vertexes_dist_matrix_np
 
@@ -61,7 +63,7 @@ def browseFiles():
 
 
 def calculateSkeleton(op,working_mode='SNAP_FROM_LIVE'):
-    global all_vertexes_dist_matrix_np
+    global all_vertexes_dist_matrix_np, label_Result_display
     label_Result_display.configure(text="Wait for you to select image...", bg="light gray",fg="black")
     if working_mode=='SNAP_FROM_LIVE':
         last_snaped_image = newest_file_in_folder(op.FULL_IN_LOG_IMG_FOLDER)
@@ -152,10 +154,12 @@ def newest_file_in_folder(path):
     paths = [os.path.join(path, basename) for basename in files]
     return max(paths, key=os.path.getctime)
 
+def open_form_window(op):
+    form_win_ob = frm.PatientClass('C:\\24D\\LibertySnapshot\\LibertyConfig',op)
 
 
 
-# Driver code
+
 if __name__ == "__main__":
     create_logger()
     OpenPose=OpenPoseClass('C:/24D/LibertySnapshot')
@@ -165,24 +169,29 @@ if __name__ == "__main__":
     # Create an instance of TKinter Window or frame
     win = Tk()
     # Set the size of the window
-    win.geometry("700x565")
+    win.geometry("700x595")
+    win.iconbitmap(OpenPose.FULL_PATH_APP_ICON )
     # create a button, that when pressed, will take the current
     # frame and save it to file
     # btn = Button(win, text="Snapshot",command=takeSnapshot)
-    btn = Button(win, text="Snapshot!",
-                 command=lambda myOp=OpenPose : takeSnapshot(myOp))
-                 #command=takeSnapshot)
-    btn.grid(row=1, column=0)
+    patient_form_btn = Button(win, text="Insert Patient Data",
+                 command = lambda myOp=OpenPose: open_form_window(myOp))
 
+    patient_form_btn.grid(row=1, column=0, ipadx="100")
+
+    # btn = Button(win, text="Snapshot",command=takeSnapshot)
+    btn = Button(win, text="Snapshot!",
+                 command=lambda myOp=OpenPose: takeSnapshot(myOp))
+    btn.grid(row=2, column=0, ipadx="122")
     btn_prev = Button(win, text="Measure Demo Image",
                  command=lambda myOp=OpenPose, myMode='DEMO_IMAGE' : calculateSkeleton(myOp,myMode))
-    btn_prev.grid(row=2, column=0)
+    btn_prev.grid(row=3, column=0, ipadx="90")
 
     label_Result_display = Label(win,
                                      text="",
                                      width=100, height=2,
                                      fg="blue")
-    label_Result_display.grid(row=3, column=0)
+    label_Result_display.grid(row=4, column=0)
 
     label = Label(win)
 

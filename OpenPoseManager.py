@@ -29,6 +29,7 @@ class OpenPoseClass:
         self.INPUT_SNAP_IMAGE_FOLDER = "/Snapshot-Image"
         self.OUTPUT_FOLDER_NAME = self.DATA_FOLDER + "/Results"
         self.FULL_PATH_CONFIG_FOLDER = self.DATA_FOLDER + "/LibertyConfig"
+        self.FULL_PATH_APP_ICON = self.FULL_PATH_CONFIG_FOLDER + "/LibertySign.ico"
         #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
         self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Only legs Genu Varum.jpg"
 
@@ -71,14 +72,15 @@ class OpenPoseClass:
             os.mkdir(self.SKELETON_IMAGE_FOLDER_NAME)
         self.JSON_TMP_FILE = self.JSON_FOLDER_NAME + "/" + self.SNAPSHOT_TMP_NAME + "_keypoints.json"
         self.SEKELETON_TMP_IMG = self.SKELETON_IMAGE_FOLDER_NAME + "/" + self.SNAPSHOT_TMP_NAME + "_rendered.png"
+
         #Configuration
         self.FULL_PATH_CONFIG_FOLDER = self.DATA_FOLDER + "/LibertyConfig"
         if not os.path.exists(self.FULL_PATH_CONFIG_FOLDER):
             os.mkdir(self.SKELETON_IMAGE_FOLDER_NAME)
             glb.logger.debug(f'RAMI ERROR: The configuration folder dose not exist there fore I create it for you but and its content is missing: {self.SKELETON_IMAGE_FOLDER_NAME}')
-        #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Men-Stand-Normal.jpg"
-        #self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Only legs Genu Varum.jpg"
         self.FULL_PATH_DEMO_IMG = self.FULL_PATH_CONFIG_FOLDER + "/Genu Varum Two girles.jpg"
+        self.FULL_PATH_APP_ICON = self.FULL_PATH_CONFIG_FOLDER + "/LibertySign.ico"
+
         self.OpInput = " --image_dir " + self.FULL_IN_TMP_IMG_FOLDER
         self.OpJsonResult = " --write_json " + self.JSON_FOLDER_NAME
         self.OpSkelatonImageResult = " --write_images " + self.SKELETON_IMAGE_FOLDER_NAME
